@@ -373,3 +373,69 @@
     width: 12px;
     height: 12px;
 }
+/* === PREVIEW PAGE === */
+.preview-toolbar {
+  background: white;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  @page { margin: 0; size: auto; }
+  body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Hide UI */
+  .no-print,
+  .preview-toolbar,
+  nav,
+  header,
+  .navbar,
+  .AppNavbar,
+  .builder-forms,
+  .template-selector,
+  button,
+  .btn,
+  .toast {
+    display: none !important;
+  }
+
+  /* Reset Containers */
+  .builder-layout,
+  .preview-page-container,
+  .preview-layout,
+  .builder-preview-panel {
+    display: block !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+    position: static !important;
+  }
+
+  /* Resume Sheet Proper */
+  .resume-preview-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    /* We keep the padding to simulate the document margins */
+    padding: 15mm !important; 
+    zoom: 1; /* Ensure sizing is correct */
+  }
+
+  .resume-section {
+    page-break-inside: avoid;
+  }
+
+  .item-row {
+    page-break-inside: avoid;
+  }
+  
+  h1, h2, h3, p, span, div {
+     color: black !important; /* Force black text */
+  }
+}
