@@ -2,8 +2,8 @@
 .builder-layout {
     display: flex;
     height: calc(100vh - 64px);
-    /* Navbar height */
     overflow: hidden;
+    background: var(--color-paper);
 }
 
 .builder-forms {
@@ -21,30 +21,287 @@
 
 .builder-preview-panel {
     flex: 1;
-    background: var(--color-paper);
+    background: #E5E5E5;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     padding: var(--space-4);
     overflow-y: auto;
 }
 
-.resume-preview-sheet {
-    width: 210mm;
-    height: 297mm;
+/* Template Selector */
+.template-selector {
+    display: flex;
     background: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 20mm;
-    font-family: 'Times New Roman', serif;
-    /* Classic resume font */
-    color: black;
-    font-size: 11pt;
-    overflow: hidden;
-    transform: scale(0.8);
-    /* Scale to fit */
-    transform-origin: top center;
+    padding: 4px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-4);
+    gap: 4px;
 }
 
+.template-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-ink-subtle);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: all var(--transition-base);
+}
+
+.template-btn:hover {
+    color: var(--color-ink);
+    background: var(--color-paper);
+}
+
+.template-btn.active {
+    background: var(--color-ink);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Resume Sheet Base */
+.resume-preview-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 20mm;
+    color: #111;
+    font-size: 10pt;
+    overflow: hidden;
+    margin-bottom: 40px;
+    line-height: 1.4;
+}
+
+.resume-preview-sheet h1 {
+    margin: 0;
+    padding: 0;
+}
+
+.resume-preview-sheet h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.resume-preview-sheet p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Resume Structure Classes */
+.resume-header {
+    margin-bottom: 24px;
+}
+
+.resume-section {
+    margin-bottom: 16px;
+}
+
+.resume-contact {
+    font-size: 9pt;
+    margin-top: 4px;
+}
+
+.resume-contact span {
+    margin: 0 4px;
+}
+
+.item-row {
+    margin-bottom: 10px;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.item-title {
+    font-weight: bold;
+}
+
+.item-subtitle {
+    font-style: italic;
+    margin-bottom: 2px;
+}
+
+.item-date {
+    font-weight: bold;
+}
+
+.item-desc {
+    font-size: 10pt;
+}
+
+
+/* === TEMPLATE: CLASSIC === */
+.resume-classic {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.resume-classic .resume-header {
+    text-align: center;
+}
+
+.resume-classic h1 {
+    font-family: 'Times New Roman', serif;
+    text-transform: uppercase;
+    font-size: 24pt;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.resume-classic h2 {
+    font-family: 'Times New Roman', serif;
+    font-size: 12pt;
+    border-bottom: 1px solid black;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.resume-classic .item-title {
+    font-weight: 700;
+}
+
+.resume-classic .item-subtitle {
+    font-style: italic;
+}
+
+/* === TEMPLATE: MODERN === */
+.resume-modern {
+    font-family: 'Inter', 'Helvetica', sans-serif;
+}
+
+.resume-modern .resume-header {
+    text-align: left;
+    border-bottom: 2px solid #333;
+    padding-bottom: 16px;
+}
+
+.resume-modern h1 {
+    font-weight: 800;
+    font-size: 28pt;
+    letter-spacing: -0.02em;
+    color: #000;
+}
+
+.resume-modern h2 {
+    font-size: 11pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.resume-modern .item-title {
+    font-weight: 700;
+    color: #000;
+    font-size: 11pt;
+}
+
+.resume-modern .item-subtitle {
+    font-style: normal;
+    font-weight: 500;
+    color: #444;
+}
+
+.resume-modern .item-date {
+    font-weight: 400;
+    color: #666;
+}
+
+/* === TEMPLATE: MINIMAL === */
+.resume-minimal {
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+.resume-minimal .resume-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.resume-minimal h1 {
+    font-weight: 300;
+    font-size: 24pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.resume-minimal h2 {
+    font-size: 9pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    border-bottom: 1px solid #EEE;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    color: #000;
+    text-align: center;
+}
+
+.resume-minimal .item-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.resume-minimal .item-header {
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.resume-minimal .item-date {
+    font-weight: 400;
+    font-size: 9pt;
+    color: #888;
+    text-align: right;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.resume-minimal .item-content {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.resume-minimal .item-title {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.resume-minimal .item-subtitle {
+    font-style: normal;
+    font-size: 9pt;
+    color: #555;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Wait, minimal grid layout is tricky if JSX structure doesn't support it.
+   I'll stick to a simpler minimal layout that works with the same JSX structure.
+*/
+.resume-minimal .item-row {
+    margin-bottom: 12px;
+}
+
+.resume-minimal .item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+/* Form Styles */
 .form-section {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -79,4 +336,40 @@
     margin-bottom: 4px;
     text-transform: uppercase;
     color: var(--color-ink-subtle);
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: var(--font-sans);
+    transition: all 0.2s;
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: var(--color-ink);
+    outline: none;
+}
+
+/* Suggestion */
+.field-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #D97706;
+    background: #FFFBEB;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    border: 1px solid #FEF3C7;
+}
+
+.field-suggestion svg {
+    width: 12px;
+    height: 12px;
 }

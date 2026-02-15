@@ -5,15 +5,18 @@ import './BuilderPage.css';
 export default function BuilderPage() {
     const [data, setData] = useState(() => {
         const saved = localStorage.getItem('resumeBuilderData');
-        return saved ? JSON.parse(saved) : {
+        const parsed = saved ? JSON.parse(saved) : {
             personal: { name: '', email: '', phone: '', location: '' },
             summary: '',
             education: [],
             experience: [],
             projects: [],
             skills: '',
-            links: { github: '', linkedin: '' }
+            links: { github: '', linkedin: '' },
+            activeTemplate: 'classic'
         };
+        if (!parsed.activeTemplate) parsed.activeTemplate = 'classic';
+        return parsed;
     });
 
     const [atsScore, setAtsScore] = useState({ score: 0, suggestions: [] });
@@ -46,7 +49,7 @@ export default function BuilderPage() {
             suggestions.push("Add at least 2 projects.");
         }
 
-        // At least 1 experience (+10)
+        // At least 1 work experience (+10)
         if (data.experience.length >= 1) {
             score += 10;
         } else {
@@ -91,7 +94,7 @@ export default function BuilderPage() {
             suggestions.push("Complete all education fields.");
         }
 
-        return { score: Math.min(100, score), suggestions: suggestions.slice(0, 3) };
+        return { score: Math.min(100, score), suggestions: suggestions };
     };
 
     const loadSampleData = () => {
@@ -105,7 +108,8 @@ export default function BuilderPage() {
                 { id: 2, name: 'E-commerce Dashboard', description: 'Designed a real-time analytics dashboard processing 10k events/sec.' }
             ],
             skills: 'React, Node.js, Python, TypeScript, AWS, Docker, GraphQL, PostgreSQL',
-            links: { github: 'github.com/alex', linkedin: 'linkedin.com/in/alex' }
+            links: { github: 'github.com/alex', linkedin: 'linkedin.com/in/alex' },
+            activeTemplate: 'classic'
         });
     };
 
@@ -114,7 +118,45 @@ export default function BuilderPage() {
         setData(prev => ({ ...prev, personal: { ...prev.personal, [name]: value } }));
     };
 
-    // Helper to get color based on score
+    const getBulletSuggestions = (text) => {
+        if (!text) return [];
+        const lines = text.split('\n').filter(line => line.trim().length > 5);
+        const issues = [];
+        const actionVerbs = /^(Built|Developed|Designed|Implemented|Led|Improved|Created|Optimized|Automated|Reduced|Increased|Managed|Orchestrated|Architected|Engineered|Deployed|Launched|Collaborated)/i;
+        const numberPattern = /\d+|%|\bk\b|\bX\b/i;
+
+        let missingVerb = false;
+        let missingQuant = false;
+
+        lines.forEach(line => {
+            const cleanLine = line.replace(/^[-•*]\s*/, '').trim();
+            if (!actionVerbs.test(cleanLine)) missingVerb = true;
+            if (!numberPattern.test(cleanLine)) missingQuant = true;
+        });
+
+        if (missingVerb) issues.push("Start bullets with strong action verbs (Built, Led).");
+        if (missingQuant) issues.push("Add measurable impact (numbers, %, scale).");
+
+        return issues;
+    };
+
+    const SuggestionBox = ({ text }) => {
+        const issues = getBulletSuggestions(text);
+        if (issues.length === 0) return null;
+        return (
+            <div className="mt-2 space-y-1">
+                {issues.map((msg, idx) => (
+                    <div key={idx} className="field-suggestion">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 2.625v2.813c0 .553.448 1.002 1.002 1.002h9.75c.553 0 1.002-.449 1.002-1.002V9.312c0-.553-.448-1.002-1.002-1.002H20.25l-.375 9.281m-16.129-9.281l-.375 9.281m0 0H3.375a1.002 1.002 0 01-1.002-1.002V15.75c0-.553.449-1.002 1.002-1.002h9.75" />
+                        </svg>
+                        <span>{msg}</span>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
     const getScoreColor = (s) => {
         if (s >= 80) return 'var(--color-success)';
         if (s >= 50) return 'var(--color-warning)';
@@ -129,9 +171,24 @@ export default function BuilderPage() {
                 <div className="builder-forms">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-bold font-serif">Resume Details</h2>
-                        <button onClick={loadSampleData} className="btn btn-sm btn-secondary">
-                            Load Sample Data
-                        </button>
+                        <div className="flex gap-2">
+                            <button onClick={loadSampleData} className="btn btn-sm btn-secondary">
+                                Sample
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Template Selector */}
+                    <div className="template-selector">
+                        {['classic', 'modern', 'minimal'].map(t => (
+                            <button
+                                key={t}
+                                className={`template-btn ${data.activeTemplate === t ? 'active' : ''}`}
+                                onClick={() => setData(prev => ({ ...prev, activeTemplate: t }))}
+                            >
+                                {t.charAt(0).toUpperCase() + t.slice(1)}
+                            </button>
+                        ))}
                     </div>
 
                     {/* ATS Score Panel */}
@@ -148,18 +205,22 @@ export default function BuilderPage() {
                                 style={{ width: `${atsScore.score}%`, backgroundColor: getScoreColor(atsScore.score) }}
                             ></div>
                         </div>
+
+                        {/* Improvements */}
                         {atsScore.suggestions.length > 0 && (
-                            <div className="space-y-2">
-                                {atsScore.suggestions.map((sugg, idx) => (
-                                    <div key={idx} className="flex items-start gap-2 text-sm text-red-700 bg-red-50 p-2 rounded">
-                                        <span>•</span>
-                                        <span>{sugg}</span>
-                                    </div>
-                                ))}
+                            <div className="mt-4">
+                                <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">Top 3 Improvements</h4>
+                                <div className="space-y-2">
+                                    {atsScore.suggestions.slice(0, 3).map((sugg, idx) => (
+                                        <div key={idx} className="flex items-start gap-2 text-sm text-gray-700 bg-gray-50 p-2 rounded border-l-4 border-red-400">
+                                            <span>{sugg}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                         {atsScore.score === 100 && (
-                            <div className="text-sm text-green-700 bg-green-50 p-2 rounded flex items-center gap-2">
+                            <div className="text-sm text-green-700 bg-green-50 p-2 rounded flex items-center gap-2 mt-2">
                                 <span>✓</span>
                                 <span>Excellent! Your resume is ATS-ready.</span>
                             </div>
@@ -254,7 +315,6 @@ export default function BuilderPage() {
                                 />
                             </div>
                         ))}
-                        {data.education.length === 0 && <p className="text-sm text-gray-400 italic">No education added yet.</p>}
                     </section>
 
                     {/* Experience */}
@@ -305,7 +365,7 @@ export default function BuilderPage() {
                                 />
                                 <textarea
                                     className="textarea w-full"
-                                    placeholder="Description (include numbers!)"
+                                    placeholder="Description (e.g. Led team of 5...)"
                                     value={exp.description}
                                     onChange={e => {
                                         const newExp = [...data.experience];
@@ -313,6 +373,7 @@ export default function BuilderPage() {
                                         setData(prev => ({ ...prev, experience: newExp }));
                                     }}
                                 />
+                                <SuggestionBox text={exp.description} />
                             </div>
                         ))}
                     </section>
@@ -343,7 +404,7 @@ export default function BuilderPage() {
                                 />
                                 <textarea
                                     className="textarea w-full"
-                                    placeholder="Description (include impact!)"
+                                    placeholder="Description (e.g. Built a dashboard serving 2k users...)"
                                     value={proj.description}
                                     onChange={e => {
                                         const newProj = [...data.projects];
@@ -351,6 +412,7 @@ export default function BuilderPage() {
                                         setData(prev => ({ ...prev, projects: newProj }));
                                     }}
                                 />
+                                <SuggestionBox text={proj.description} />
                             </div>
                         ))}
                     </section>
@@ -400,74 +462,83 @@ export default function BuilderPage() {
 
                 {/* Right: Live Preview */}
                 <div className="builder-preview-panel">
-                    <div className="resume-preview-sheet">
-                        {/* Minimal Resume Layout */}
-                        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                            <h1 style={{ fontSize: '24pt', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                {data.personal.name || 'YOUR NAME'}
-                            </h1>
-                            <div style={{ fontSize: '10pt' }}>
-                                {[data.personal.email, data.personal.phone, data.personal.location].filter(Boolean).join(' | ')}
+                    <div className={`resume-preview-sheet resume-${data.activeTemplate}`}>
+
+                        {/* Header */}
+                        <div className="resume-header">
+                            <h1>{data.personal.name || 'YOUR NAME'}</h1>
+                            <div className="resume-contact">
+                                <span>{data.personal.email}</span>
+                                {data.personal.phone && <span>| {data.personal.phone}</span>}
+                                {data.personal.location && <span>| {data.personal.location}</span>}
                             </div>
-                            <div style={{ fontSize: '10pt', marginTop: '4px' }}>
-                                {[data.links.github, data.links.linkedin].filter(Boolean).join(' | ')}
+                            <div className="resume-contact">
+                                <span>{data.links.github}</span>
+                                {(data.links.github && data.links.linkedin) && <span>|</span>}
+                                <span>{data.links.linkedin}</span>
                             </div>
                         </div>
 
                         {data.summary && (
-                            <div style={{ marginBottom: '16px' }}>
-                                <h2 style={{ fontSize: '12pt', borderBottom: '1px solid black', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px' }}>Summary</h2>
-                                <p style={{ fontSize: '10pt', lineHeight: '1.4' }}>{data.summary}</p>
+                            <div className="resume-section">
+                                <h2>Summary</h2>
+                                <p>{data.summary}</p>
                             </div>
                         )}
 
                         {data.experience.length > 0 && (
-                            <div style={{ marginBottom: '16px' }}>
-                                <h2 style={{ fontSize: '12pt', borderBottom: '1px solid black', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px' }}>Experience</h2>
+                            <div className="resume-section">
+                                <h2>Experience</h2>
                                 {data.experience.map(exp => (
-                                    <div key={exp.id} style={{ marginBottom: '10px' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold' }}>
-                                            <span>{exp.company}</span>
-                                            <span>{exp.duration}</span>
+                                    <div key={exp.id} className="item-row">
+                                        <div className="item-header">
+                                            <span className="item-title">{exp.company}</span>
+                                            <span className="item-date">{exp.duration}</span>
                                         </div>
-                                        <div style={{ fontStyle: 'italic', marginBottom: '4px' }}>{exp.role}</div>
-                                        <div style={{ fontSize: '10pt' }}>• {exp.description}</div>
+                                        <div className="item-subtitle">{exp.role}</div>
+                                        <div className="item-desc">
+                                            • {exp.description}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         )}
 
                         {data.projects.length > 0 && (
-                            <div style={{ marginBottom: '16px' }}>
-                                <h2 style={{ fontSize: '12pt', borderBottom: '1px solid black', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px' }}>Projects</h2>
+                            <div className="resume-section">
+                                <h2>Projects</h2>
                                 {data.projects.map(proj => (
-                                    <div key={proj.id} style={{ marginBottom: '8px' }}>
-                                        <div style={{ fontWeight: 'bold' }}>{proj.name}</div>
-                                        <div style={{ fontSize: '10pt' }}>• {proj.description}</div>
+                                    <div key={proj.id} className="item-row">
+                                        <div className="item-header">
+                                            <span className="item-title">{proj.name}</span>
+                                        </div>
+                                        <div className="item-desc">
+                                            • {proj.description}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         )}
 
                         {data.education.length > 0 && (
-                            <div style={{ marginBottom: '16px' }}>
-                                <h2 style={{ fontSize: '12pt', borderBottom: '1px solid black', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px' }}>Education</h2>
+                            <div className="resume-section">
+                                <h2>Education</h2>
                                 {data.education.map(edu => (
-                                    <div key={edu.id} style={{ marginBottom: '4px' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold' }}>
-                                            <span>{edu.school}</span>
-                                            <span>{edu.year}</span>
+                                    <div key={edu.id} className="item-row">
+                                        <div className="item-header">
+                                            <span className="item-title">{edu.school}</span>
+                                            <span className="item-date">{edu.year}</span>
                                         </div>
-                                        <div>{edu.degree}</div>
+                                        <div className="item-subtitle">{edu.degree}</div>
                                     </div>
                                 ))}
                             </div>
                         )}
 
                         {data.skills && (
-                            <div style={{ marginBottom: '16px' }}>
-                                <h2 style={{ fontSize: '12pt', borderBottom: '1px solid black', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px' }}>Skills</h2>
-                                <div style={{ fontSize: '10pt' }}>{data.skills}</div>
+                            <div className="resume-section">
+                                <h2>Skills</h2>
+                                <p>{data.skills}</p>
                             </div>
                         )}
                     </div>
