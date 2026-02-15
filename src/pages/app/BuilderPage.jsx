@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import AppNavbar from '../../components/app/AppNavbar';
 import './BuilderPage.css';
 import { Renderer } from '../../components/templates/ResumeTemplates';
+import { calculateScore } from '../../utils/scoring';
 
 const COLORS = [
     { name: 'Teal', value: '#257a77' }, // hsl(168, 60%, 40%) - approx
@@ -82,27 +83,7 @@ export default function BuilderPage() {
         setAtsScore(calculateScore(data));
     }, [data]);
 
-    const calculateScore = (data) => {
-        let score = 0;
-        const suggestions = [];
-        score += 20; // Base
-        const summaryWords = data.summary.trim().split(/\s+/).filter(w => w.length > 0).length;
-        if (summaryWords >= 40 && summaryWords <= 120) score += 15;
-        else suggestions.push(`Write a stronger summary (target 40–120 words).`);
 
-        if (data.projects.length >= 2) score += 10;
-        else suggestions.push("Add at least 2 projects.");
-
-        const totalSkills = (data.skills.technical?.length || 0) + (data.skills.soft?.length || 0) + (data.skills.tools?.length || 0);
-        if (totalSkills >= 8) score += 10;
-        else suggestions.push("Add more skills (target 8+).");
-
-        const allDesc = [...data.experience.map(e => e.description), ...data.projects.map(p => p.description)];
-        if (allDesc.some(d => /\d+|%/.test(d || ''))) score += 15;
-        else suggestions.push("Add numbers/metrics to descriptions.");
-
-        return { score: Math.min(100, score), suggestions: suggestions };
-    };
 
     const handleSuggestSkills = () => {
         setIsSuggestingSkills(true);
