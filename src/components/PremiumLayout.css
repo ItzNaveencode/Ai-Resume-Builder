@@ -1,0 +1,42 @@
+/* === Premium Layout === */
+.premium-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.premium-layout__body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.premium-layout__workspace {
+    flex: 7;
+    min-width: 0;
+    padding: var(--space-8);
+    overflow-y: auto;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.premium-layout__panel {
+    flex: 3;
+    min-width: 280px;
+    max-width: 420px;
+    border-left: 1px solid var(--color-border);
+    background: var(--color-bg-secondary);
+    overflow-y: auto;
+}
+
+/* Responsive: stack on smaller screens */
+@media (max-width: 900px) {
+    .premium-layout__body {
+        flex-direction: column;
+    }
+
+    .premium-layout__panel {
+        max-width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--color-border);
+    }
+}

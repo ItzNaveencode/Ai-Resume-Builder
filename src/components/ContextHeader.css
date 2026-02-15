@@ -1,0 +1,94 @@
+/* === Context Header / Step Nav Rail === */
+.context-header {
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+}
+
+.context-header__steps {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: max-content;
+}
+
+.context-header__step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.context-header__step:hover:not(:disabled) {
+    background: var(--color-bg-glass);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+}
+
+.context-header__step.active {
+    background: var(--gradient-brand-subtle);
+    border-color: var(--color-border-accent);
+    color: var(--color-text-accent);
+    font-weight: 600;
+}
+
+.context-header__step.completed {
+    color: var(--color-text-success);
+}
+
+.context-header__step.completed .context-header__step-num {
+    background: rgba(52, 211, 153, 0.15);
+    border-color: rgba(52, 211, 153, 0.3);
+    color: var(--color-text-success);
+}
+
+.context-header__step.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.context-header__step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-bg-glass-strong);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.context-header__step.active .context-header__step-num {
+    background: var(--gradient-brand);
+    border-color: transparent;
+    color: white;
+}
+
+.context-header__step-title {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .context-header__step-title {
+        display: inline;
+    }
+}
+
+.context-header__lock {
+    color: var(--color-text-muted);
+    margin-left: var(--space-1);
+}
