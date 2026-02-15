@@ -1,81 +1,85 @@
-/* === Context Header / Step Nav Rail === */
+/* === Step Navigation Rail (Premium Document Style) === */
 .context-header {
-    padding: var(--space-3) var(--space-6);
-    background: var(--color-bg-secondary);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-paper);
     border-bottom: 1px solid var(--color-border);
     overflow-x: auto;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .context-header__steps {
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    min-width: max-content;
 }
 
 .context-header__step {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
+    gap: var(--space-1);
+    padding: 8px 12px;
     background: transparent;
-    border: 1px solid transparent;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-family: var(--font-family);
+    font-family: var(--font-sans);
     font-size: var(--font-size-xs);
     font-weight: 500;
-    color: var(--color-text-secondary);
-    transition: all var(--transition-fast);
-    white-space: nowrap;
+    color: var(--color-ink-subtle);
+    transition: all var(--transition-base);
+    border: 1px solid transparent;
 }
 
 .context-header__step:hover:not(:disabled) {
-    background: var(--color-bg-glass);
-    color: var(--color-text-primary);
-    border-color: var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-sm);
 }
 
 .context-header__step.active {
-    background: var(--gradient-brand-subtle);
-    border-color: var(--color-border-accent);
-    color: var(--color-text-accent);
-    font-weight: 600;
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-accent);
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
 }
 
 .context-header__step.completed {
-    color: var(--color-text-success);
+    color: var(--color-ink);
+    text-decoration: line-through;
+    text-decoration-color: var(--color-success);
 }
 
 .context-header__step.completed .context-header__step-num {
-    background: rgba(52, 211, 153, 0.15);
-    border-color: rgba(52, 211, 153, 0.3);
-    color: var(--color-text-success);
+    background: var(--color-success);
+    color: white;
+    border-color: var(--color-success);
+    text-decoration: none;
 }
 
 .context-header__step.locked {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
 .context-header__step-num {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background: var(--color-bg-glass-strong);
-    border: 1px solid var(--color-border);
+    background: var(--color-border);
+    color: var(--color-ink-subtle);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 10px;
     font-weight: 700;
     flex-shrink: 0;
+    transition: all var(--transition-base);
 }
 
 .context-header__step.active .context-header__step-num {
-    background: var(--gradient-brand);
-    border-color: transparent;
+    background: var(--color-accent);
     color: white;
+    border-color: var(--color-accent);
 }
 
 .context-header__step-title {
@@ -89,6 +93,6 @@
 }
 
 .context-header__lock {
-    color: var(--color-text-muted);
-    margin-left: var(--space-1);
+    color: var(--color-ink-subtle);
+    margin-left: 4px;
 }

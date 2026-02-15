@@ -1,29 +1,26 @@
-/* === Step Page === */
+/* === Step Page (Editorial Document) === */
 .step-page {
     max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: var(--space-5);
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--space-4);
 }
 
 /* Header */
 .step-page__header {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-5);
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
+    border-bottom: 2px solid var(--color-accent);
+    /* Strong accent line */
 }
 
 .step-page__icon {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-xl);
-    background: var(--gradient-brand-subtle);
-    border: 1px solid var(--color-border-accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
+    display: none;
+    /* Minimalism — remove big icon */
 }
 
 .step-page__header-text {
@@ -35,106 +32,133 @@
 .step-page__step-badge {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 8px;
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.1em;
+    color: var(--color-ink-subtle);
+    font-weight: 600;
 }
 
 .step-page__title {
-    font-size: var(--font-size-3xl);
-    font-weight: 800;
-    color: var(--color-text-primary);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    /* Big editorial header */
+    font-weight: 700;
+    color: var(--color-ink);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
 }
 
 .step-page__description {
-    font-size: var(--font-size-md);
-    color: var(--color-text-secondary);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-lg);
+    color: var(--color-ink);
+    font-style: italic;
+    max-width: 70ch;
     line-height: 1.6;
 }
 
-/* Workspace */
+/* Workspace = Document Body */
 .step-page__workspace {
-    padding: var(--space-8);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+    background: var(--color-surface);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    /* Clean paper card */
+    border-radius: var(--radius-sm);
+    /* Sharp edges */
 }
 
 .step-page__workspace-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+}
+
+.section-title {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: var(--font-size-sm);
+    color: var(--color-ink-subtle);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-1);
+    margin-bottom: var(--space-3);
+}
+
+.section-subtitle {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-md);
+    color: var(--color-ink);
 }
 
 /* Instructions */
 .step-page__instructions {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: var(--space-3);
 }
 
 .step-page__instruction-card {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    border-radius: var(--radius-md);
-    background: var(--color-bg-glass);
-    border: 1px solid var(--color-border);
-    transition: all var(--transition-fast);
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-paper);
+    border-left: 2px solid var(--color-border);
+    transition: all var(--transition-base);
 }
 
 .step-page__instruction-card:hover {
-    background: var(--color-bg-glass-strong);
-    border-color: var(--color-border-hover);
+    border-left-color: var(--color-accent);
+    background: white;
+    box-shadow: var(--shadow-md);
 }
 
 .step-page__instruction-num {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--gradient-brand);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--font-size-xs);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-lg);
     font-weight: 700;
-    flex-shrink: 0;
+    color: var(--color-accent);
+    line-height: 1;
 }
 
 .step-page__instruction-card strong {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-primary);
     display: block;
-    margin-bottom: var(--space-1);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--color-ink);
+    margin-bottom: 4px;
 }
 
 .step-page__instruction-card p {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-    line-height: 1.5;
+    font-family: var(--font-sans);
+    color: var(--color-ink-subtle);
+    font-size: var(--font-size-sm);
+    margin: 0;
 }
 
 /* Gate Message */
 .step-page__gate-message {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    background: #FFF8E1;
+    /* Light yellow paper note */
+    border: 1px solid #FFECB3;
+    color: #B00020;
+    /* Error red */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-4) var(--space-5);
-    border-radius: var(--radius-md);
-    background: rgba(251, 191, 36, 0.06);
-    border: 1px solid rgba(251, 191, 36, 0.15);
-    color: var(--color-text-warning);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
+    gap: 12px;
 }
 
-/* Navigation */
+/* Nav */
 .step-page__nav {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding-top: var(--space-4);
+    margin-top: var(--space-5);
     border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
 }
