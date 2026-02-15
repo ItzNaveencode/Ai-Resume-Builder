@@ -8,7 +8,25 @@ export default function PreviewPage() {
     useEffect(() => {
         const saved = localStorage.getItem('resumeBuilderData');
         if (saved) {
-            setData(JSON.parse(saved));
+            let parsed = JSON.parse(saved);
+            // Quick migration for preview if needed (though Builder handles it on load)
+            if (typeof parsed.skills === 'string') {
+                parsed.skills = {
+                    technical: parsed.skills ? parsed.skills.split(',').map(s => s.trim()).filter(Boolean) : [],
+                    soft: [],
+                    tools: []
+                };
+            }
+            if (parsed.projects) {
+                parsed.projects = parsed.projects.map(p => ({
+                    ...p,
+                    title: p.title || p.name || '',
+                    techStack: p.techStack || [],
+                    liveUrl: p.liveUrl || '',
+                    githubUrl: p.githubUrl || ''
+                }));
+            }
+            setData(parsed);
         }
     }, []);
 
@@ -49,7 +67,8 @@ export default function PreviewPage() {
         if (data.projects.length > 0) {
             lines.push('\nPROJECTS');
             data.projects.forEach(proj => {
-                lines.push(`${proj.name}`);
+                lines.push(`${proj.title} ${proj.liveUrl ? `| ${proj.liveUrl}` : ''}`);
+                if (proj.techStack?.length > 0) lines.push(`Stack: ${proj.techStack.join(', ')}`);
                 lines.push(proj.description);
             });
         }
@@ -63,7 +82,9 @@ export default function PreviewPage() {
 
         if (data.skills) {
             lines.push('\nSKILLS');
-            lines.push(data.skills);
+            if (data.skills.technical?.length > 0) lines.push(`Technical: ${data.skills.technical.join(', ')}`);
+            if (data.skills.tools?.length > 0) lines.push(`Tools: ${data.skills.tools.join(', ')}`);
+            if (data.skills.soft?.length > 0) lines.push(`Soft: ${data.skills.soft.join(', ')}`);
         }
 
         const text = lines.join('\n');
@@ -131,6 +152,24 @@ export default function PreviewPage() {
                         </div>
                     )}
 
+                    {/* Skills Display */}
+                    {(data.skills.technical?.length > 0 || data.skills.soft?.length > 0 || data.skills.tools?.length > 0) && (
+                        <div className="resume-section">
+                            <h2>Skills</h2>
+                            <div className="skills-container" style={{ fontSize: '10pt', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                {data.skills.technical?.length > 0 && (
+                                    <div><strong>Technical:</strong> {data.skills.technical.join(', ')}</div>
+                                )}
+                                {data.skills.tools?.length > 0 && (
+                                    <div><strong>Tools:</strong> {data.skills.tools.join(', ')}</div>
+                                )}
+                                {data.skills.soft?.length > 0 && (
+                                    <div><strong>Soft Skills:</strong> {data.skills.soft.join(', ')}</div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
                     {data.experience.length > 0 && (
                         <div className="resume-section">
                             <h2>Experience</h2>
@@ -153,10 +192,22 @@ export default function PreviewPage() {
                         <div className="resume-section">
                             <h2>Projects</h2>
                             {data.projects.map(proj => (
-                                <div key={proj.id} className="item-row">
+                                <div key={proj.id} className="item-row" style={{ marginBottom: '12px' }}>
                                     <div className="item-header">
-                                        <span className="item-title">{proj.name}</span>
+                                        <span className="item-title">{proj.title}</span>
+                                        <span className="item-date" style={{ fontWeight: 'normal', fontSize: '9pt' }}>
+                                            {[
+                                                proj.liveUrl ? `Live: ${proj.liveUrl}` : null,
+                                                proj.githubUrl ? `GitHub: ${proj.githubUrl}` : null
+                                            ].filter(Boolean).join(' | ')}
+                                        </span>
                                     </div>
+                                    {/* Tech Stack Pills for Preview */}
+                                    {proj.techStack?.length > 0 && (
+                                        <div style={{ fontSize: '9pt', fontStyle: 'italic', marginBottom: '2px', color: '#555' }}>
+                                            Stack: {proj.techStack.join(' • ')}
+                                        </div>
+                                    )}
                                     <div className="item-desc">
                                         • {proj.description}
                                     </div>
@@ -177,13 +228,6 @@ export default function PreviewPage() {
                                     <div className="item-subtitle">{edu.degree}</div>
                                 </div>
                             ))}
-                        </div>
-                    )}
-
-                    {data.skills && (
-                        <div className="resume-section">
-                            <h2>Skills</h2>
-                            <p>{data.skills}</p>
                         </div>
                     )}
                 </div>
