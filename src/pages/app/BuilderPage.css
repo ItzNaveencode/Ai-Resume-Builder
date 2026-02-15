@@ -1,0 +1,82 @@
+/* === Builder Page Layout === */
+.builder-layout {
+    display: flex;
+    height: calc(100vh - 64px);
+    /* Navbar height */
+    overflow: hidden;
+}
+
+.builder-forms {
+    flex: 1;
+    min-width: 400px;
+    max-width: 600px;
+    background: white;
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.builder-preview-panel {
+    flex: 1;
+    background: var(--color-paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    overflow-y: auto;
+}
+
+.resume-preview-sheet {
+    width: 210mm;
+    height: 297mm;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20mm;
+    font-family: 'Times New Roman', serif;
+    /* Classic resume font */
+    color: black;
+    font-size: 11pt;
+    overflow: hidden;
+    transform: scale(0.8);
+    /* Scale to fit */
+    transform-origin: top center;
+}
+
+.form-section {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    background: white;
+}
+
+.form-header {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--color-ink);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    color: var(--color-ink-subtle);
+}
